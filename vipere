@@ -1,0 +1,13 @@
+#!/bin/python
+from yaml import safe_load
+
+state = {
+    'endpoint': None
+}
+
+with open ( 'vipere.yml', 'r' ) as f:
+    dist=safe_load(f)
+    state['endpoint']=dist['endpoint']
+
+with open ( 'netlify.toml','wb') as n:
+    n.write (f"""[build]\n  publish = "dist/"\n  command="yarn build[[redirects]]\n  from = "/api/*"\n  to="{state['endpoint']}/:splat"\n  status = 200'"\n[[redirects]]\n  from = "/*"\n  to = "/index.html"\n  status = 200'""")

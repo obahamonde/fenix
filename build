@@ -1,0 +1,20 @@
+#!/bin/bash
+export $PATH=$PWD:$PATH
+npm i -g npm
+npm i -g yarn
+yarn global add serverless
+serverless plugin install -n serverless-python-requirements
+serverless deploy > ../../vipere.yml
+cd ../..
+virtualenv venv
+source venv/bin/activate
+pip install pyyaml
+python vipere
+# Deploy the static site
+npm i -g netlify-cli
+yarn build
+netlify deploy --prod --dir=dist --message="Deploying from CI/CD pipeline" -y
+rm vipere.yml
+rm -rf venv
+rm -rf dist
+rm -rf node_modules
