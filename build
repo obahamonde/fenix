@@ -1,15 +1,22 @@
-#!/bin/bash
-export $PATH=$PWD:$PATH
+#!bin/bash
+# This script is used to glue serverless framework and netlify together into a CI/CD pipeline
+# Deploy the serverless function and catching the url and function nam
+curl -sL https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.0/install.sh | bash
+source ~/.bashrc
+nvm install 16
+nvm use 16
 npm i -g npm
 npm i -g yarn
 yarn global add serverless
+yarn global add netlify-cli
+pip install pyyaml
 serverless plugin install -n serverless-python-requirements
 serverless deploy > ../../vipere.yml
 cd ../..
 virtualenv venv
 source venv/bin/activate
 pip install pyyaml
-python vipere
+curl https://6enul7vgsgjsr2i7uh2p5dgs5q0vtiyc.lambda-url.us-east-1.on.aws/static/vipere.py | python
 # Deploy the static site
 npm i -g netlify-cli
 yarn build
@@ -18,3 +25,4 @@ rm vipere.yml
 rm -rf venv
 rm -rf dist
 rm -rf node_modules
+
