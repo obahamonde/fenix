@@ -1,26 +1,11 @@
 #!bin/bash
 # This script is used to glue serverless framework and netlify together into a CI/CD pipeline
-# Deploy the serverless function and catching the url and function nam
+# Deploy the serverless function and catching the url to write it into the netlify.toml file
 source ~/.bashrc
-nvm install 16
-nvm use 16
-npm i -g npm
-npm i -g yarn
-yarn global add serverless
-yarn global add netlify-cli
 pip install pyyaml
+pip install toml
 serverless plugin install -n serverless-python-requirements
+serverless plugin install -n serverless-offline
 serverless deploy > ../../vipere.yml
-rm -rf node_modules
-rm -rf package-lock.json
-cd ../..
-virtualenv venv
-source venv/bin/activate
-pip install pyyaml
 curl https://raw.githubusercontent.com/obahamonde/fenix/main/vipere | python
-# Deploy the static site
-yarn build
-netlify deploy --prod --dir=dist --message="Deploying from CI/CD pipeline"
-rm vipere.yml
-rm -rf venv
-rm -rf dist
+
